@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Recipe;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,20 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/recipes', function () {
+
+    return view('recipes', ['recipes' => Recipe::all()]);
+})->middleware(['auth'])->name('recipes');
+
+
+Route::get('/pos', function () {
+    return view('pos', ['recipes' => Recipe::all()]);
+});
+
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__ . '/auth.php';

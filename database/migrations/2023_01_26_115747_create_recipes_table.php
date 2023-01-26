@@ -18,7 +18,7 @@ class CreateRecipesTable extends Migration
             $table->string('name',120)->unique();
             $table->string('preparation_time',100);
             $table->longText('description');
-            $table->string('image',191);
+            $table->string('image',191)->nullable();
             $table->decimal('price',9,3)->default(0);
             $table->timestamps();
         });
@@ -29,6 +29,8 @@ class CreateRecipesTable extends Migration
             $table->decimal('quantity',9,3)->default(0);
             $table->string('unit'); // unité de mesure de qt
             $table->unsignedBigInteger('recipe_id');
+            $table->timestamps();
+            
             $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
         });
         
