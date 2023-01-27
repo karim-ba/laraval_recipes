@@ -11,7 +11,7 @@
 
             @forelse ($recipes as $recipe)
             <div class="rounded border md:w-1/2 lg:w-1/4 p-3  h-[60vh] flex flex-col ">
-                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTB8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80"
+                <img src="{{asset('storage/image/'.$recipe->image)}}"
                     class=" w-full">
                 <div class="flex space-">
                     <span class="text-lg italic">Salade viennienne de marie</span>

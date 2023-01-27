@@ -7,6 +7,18 @@
     </x-slot>
 
     <div class="py-12">
+        <div class="top-0 fixed w-screen z-10" x-data="{ showMessage: true }" x-transition x-show="showMessage" x-init="setTimeout(() => showMessage = false, 3000)">
+            @if (session()->has('message'))
+            <div class="p-3 text-green-700 bg-green-300 rounded">
+                {{ session()->get('message') }}
+            </div>
+            @endif
+            @if (session()->has('alert'))
+            <div class="p-3 text-orange-700 bg-orange-300 rounded">
+                {{ session()->get('message') }}
+            </div>
+            @endif
+        </div>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 border flex space-x-1">
             <table class="mx-auto table-auto border-red-600 text-sm text-left rounded-lg  text-gray-500 mb-5 ">
                 <thead class="text-xs text-white bg-teal-700 uppercase ">

@@ -12,9 +12,14 @@ class Ingredient extends Model
 
     protected $fillable = [
         'name',
-        'quantity',
         'unit',
         'recipe_id',
     ];
-    
+    /**
+     * The roles that belong to the user.
+     */
+    public function recipes()
+    {
+        return $this->belongsToMany(Recipe::class,'ingredient_recipes');
+    }
 }

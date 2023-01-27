@@ -19,6 +19,9 @@
         <div class="text-gray-900 w-full md:w-1/3 h-full md:h-4/5 duration-200 absolute text-xs mx-auto text-left bg-gray-100  rounded-lg overflow-hidden shadow-lg"
             @click.away="showModal = false" x-transition>
             <div class="w-full text-lg p-3 flex justify-between">
+                @foreach ($errors->all() as $error)
+                {{ $error }}<br />
+                @endforeach
                 <span class="text-lg">Editer <span class="font-bold capitalize italic">{{ $recipe->name }}</span>
                 </span>
                 <button type="button" class="z-50 cursor-pointer transition" @click="showModal = false">
@@ -30,55 +33,134 @@
                 </button>
             </div>
 
-            <div class="w-full p-5 flex flex-col">
-                <div class="m-2">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-                        Nom
-                    </label>
-                    <input
-                        class=" appearance-none border  border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="name{{$recipe->id}}" wire:model="recipe.name" type="text" placeholder="titre">
-                </div>
-                <div class="m-2">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-                        Durée de preparation
-                    </label>
-                    <input
-                        class=" appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="name{{$recipe->preparation_time}}" wire:model="recipe.preparation_time" type="text"
-                        placeholder="titre">
-                </div>
-                <div class="m-2">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-                        Prix
-                    </label>
-                    <input
-                        class=" appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="name{{$recipe->price}}" wire:model="recipe.preparation_time" type="text"
-                        placeholder="titre">
-                </div>
-                <div class="m-2">
-                    <label for="message" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
-                    <textarea wire:model="recipe.description" rows="4"
-                        class="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
-                        placeholder="Write your thoughts here..."></textarea>
+            <div class="w-full flex flex-col pb-20 h-4/5 overflow-y-scroll bg-gray-50">
+                <div class="w-full p-5 flex flex-col">
+                    <div class="flex align-middle">
+                        <div class="m-2 w-1/2">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                                image
+                            </label>
+                            <input
+                                class=" appearance-none border  border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="name{{$recipe->id}}" type="file" wire:model="image" placeholder="titre">
+                        </div>
+                        <div class="m-2 w-1/2">
+                            @if ($image)
+                            Photo Preview:
+                            <img class="rounded-lg bg-gray-300 max-h-28" src="{{ $image->temporaryUrl() }}">
+                            @else
+                            <img class="rounded-lg bg-gray-300 max-h-28" src="{{asset('storage/image/'.$recipe->image)}}">
+
+                            @endif
+                        </div>
+                       
+                    </div>
+                    <div class="m-2">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                            Nom
+                        </label>
+                        <input
+                            class=" appearance-none border  border-gray-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="name{{$recipe->id}}" wire:model="recipe.name" type="text" placeholder="titre">
+                    </div>
+                    <div class=" flex text-lg ">
+                        <div class="m-2 w-full md:w-1/2 relative">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                                Durée de preparation
+                            </label>
+                            <input
+                                class="appearance-none border border-gray-300 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+                                id="name{{$recipe->preparation_time}}" wire:model="recipe.preparation_time"
+                                type="numeric" placeholder="0">
+                            <span class="absolute text-md text-gray-400 italic left-24 mt-2">minutes</span>
+                        </div>
+                        <div class="m-2  w-full md:w-1/2 relative">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                                Prix
+                            </label>
+                            <input
+                                class=" appearance-none  border border-gray-300 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+                                id="name{{$recipe->price}}" wire:model="recipe.price" type="numeric"
+                                placeholder="titre">
+                            <span class="absolute text-md text-gray-400 italic left-20 mt-2">dt</span>
+                        </div>
+                    </div>
+                    <div class="m-2">
+                        <label for="message" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                        <textarea wire:model="recipe.description" rows="4"
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 "
+                            placeholder="Write your thoughts here..."></textarea>
+
+                    </div>
 
                 </div>
 
-            </div>
-            
-            <div class="m-4">
-                <div class="flex justify-between">
-                    <h3 class="text-lg">Ingredients</h3>
-                    <button type="button">ajouter</button>
+                <div class="m-4 flex flex-col">
+                    <div class="flex justify-between w-full relative h-10 my-1" x-data="{ newIngredient : false}">
+                        <h3 class="text-lg">Ingredients</h3>
+                        <button class="border rounded border-indigo-500 text-indigo-500  p-2 my-auto" type="button"
+                            x-show="!newIngredient" @click="newIngredient=true">ajouter ingredient</button>
+
+                        <div x-show="newIngredient" x-transition @click.away="newIngredient = false"
+                            class="right-10 border absolute bg-white rounded flex p-1">
+                            <div class="flex h-8 overflow-hidden space-x-2 w-9/10 py-0 text-sm">
+                                <select id="ingredients" wire:model="ingredient_id"
+                                    class=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  w-full">
+                                    <option selected>Choissisez Ingredient</option>
+                                    @foreach($this->ingredients as $ingredient)
+                                    <option value="{{$ingredient->id}}">{{$ingredient->name}}</option>
+                                    @endforeach
+                                </select>
+                                <input class="rounded w-20 border border-gray-400" wire:model="ingredient_quantity"
+                                    placeholder="0.0" type="number">
+
+
+                                <span class="my-auto w-20 text-xs text-italic">
+                                    @if($this->ingredient_id>0)
+                                    {{$this->selected_ingredient->unit}}
+                                    @endif
+
+                                </span>
+
+
+                            </div>
+                            <div class="flex space-x-1">
+                                <button type="button" class="p-1" wire:click="addIngredient()"
+                                    @click="newIngredient = false"><svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M4.5 12.75l6 6 9-13.5" />
+                                    </svg>
+                                </button>
+                                <button type="button" class="p-1" @click="newIngredient = false"><svg
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class=" w-full flex flex-col border rounded-lg bg-white">
+                        @foreach($recipe->ingredients as $ingredient)
+                        <li class="py-2 px-4 border-b flex justify-between">
+                            <div class="flex ">
+                                <span class="">
+                                    {{ number_format($ingredient->pivot->quantity, 1,'.',' ') }}
+                                    {{$ingredient->unit}}
+                                </span><span class="text-gray-400">&nbsp;de &nbsp;</span>
+                                <span class="capitalize">{{$ingredient->name}} </span>
+                            </div>
+                            <button type="button" class="bg-transparent text-red-400 hover:text-red-500"
+                                onclick="confirm('Vous allez supprimer cette ingredient de cette recette ?') || event.stopImmediatePropagation()"
+                                wire:click="deleteIngredient({{$ingredient->id}})">Supprimer</button>
+                        </li>
+                        @endforeach
+                    </ul>
                 </div>
-                <ul class="flex flex-col border rounded-lg bg-white">
-                    @foreach($recipe->ingredients as $ingredient)
-                        <li class="py-2 px-4 border-b flex justify-between">{{$ingredient->name}}<button class="bg-transparent text-red-400" wire:click="deleteIngredient({{$ingredient->id}})">Supprimer</button></li>
-                    @endforeach
-                </ul>
+
             </div>
-            <div class="h-20  flex w-full align-middle absolute bottom-0 space-x-1   p-2 ">
+            <div class="h-20  flex w-full align-middle absolute bottom-0 space-x-1 p-2">
                 <button
                     class="w-1/2 h-10 md:w-2/3 bg-gray-50 my-5 border border-gray-400 hover:bg-gray-100  duration-150 text-lg text-gray-900 py-1 rounded"
                     type="button" wire:click="resetData">

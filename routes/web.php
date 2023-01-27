@@ -21,8 +21,8 @@ Route::get('/', function () {
 Route::get('/recipes', function () {
 
     return view('recipes', ['recipes' => Recipe::all()]);
-})->middleware(['auth'])->name('recipes');
-
+});
+// ->middleware(['auth'])->name('recipes');
 
 Route::get('/pos', function () {
     return view('pos', ['recipes' => Recipe::all()]);
