@@ -83,4 +83,8 @@ class EditRecipe extends Component
             $this->recipe = Recipe::find($this->recipe_id);
         }
     }
+    public function deleteRecipe($id){
+        $r = Recipe::destroy($id);
+        $this->recipe = Recipe::find($this->recipe_id);
+    }
 }

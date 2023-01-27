@@ -11,15 +11,20 @@
 
             @forelse ($recipes as $recipe)
             <div class="rounded border md:w-1/2 lg:w-1/4 p-3  h-[60vh] flex flex-col ">
-                <img src="{{asset('storage/image/'.$recipe->image)}}"
-                    class=" w-full">
-                <div class="flex space-">
-                    <span class="text-lg italic">Salade viennienne de marie</span>
-                    <span class="text-lg italic">Salade viennienne de marie</span>
+                @if($recipe->image)
+                <img src="{{asset('storage/image/'.$recipe->image)}}" class="w-full">
+                @else
+
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyjrgj-649qcfS0TeRPIPoOuBV4LMj6alNRQ&usqp=CAU"
+                    class="w-full">
+                @endif
+                <div class="flex w-full justify-between">
+                    <span class="text-lg italic">{{$recipe->name}}</span>
+                    <span class="text-lg italic">{{$recipe->price}}dt</span>
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col text-xs">
                     @forelse($recipe->ingredients as $ingredient)
-                    <span> {{$ingredient->name}}</span>
+                    <span>{{$ingredient->name}}</span>
                     @empty
 
                     @endforelse

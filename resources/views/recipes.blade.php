@@ -7,7 +7,9 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="top-0 fixed w-screen z-10" x-data="{ showMessage: true }" x-transition x-show="showMessage" x-init="setTimeout(() => showMessage = false, 3000)">
+        <h2 class="text-xl mx-auto w-full text-center">Gérer Recette</h2>
+        <div class="top-0 fixed w-screen z-10" x-data="{ showMessage: true }" x-transition x-show="showMessage"
+            x-init="setTimeout(() => showMessage = false, 3000)">
             @if (session()->has('message'))
             <div class="p-3 text-green-700 bg-green-300 rounded">
                 {{ session()->get('message') }}
@@ -26,7 +28,8 @@
                         <th class=" px-3 py-2">Name</th>
                         <th class=" px-3 py-2">prix</th>
                         <th class=" px-3 py-2">preparation time</th>
-                        <th class=" px-3 py-2">ingredient</th>
+                        <th class=" px-3 py-2">ingredients</th>
+                        <th class=" px-3 py-2">action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,30 +41,21 @@
                         <td class=" px-3 py-2">{{
                             Carbon\CarbonInterval::seconds($recipe->preparation_time)->cascade()->forHumans() ?? '' }}
                         </td>
-                        <td class="px-3 py-2">
-                            <div class="flex w-full justify-center">
-                                @livewire('edit-recipe',['recipe_id'=>$recipe->id,key($product['id'])])
+                        <td class="px-3 py-2 ">
+                            {{ count($recipe->ingredients) }}
+                            
+                        </td>
+                        <td class="px-3 py-2 flex border">
+                            <div class="flex  justify-center">
+                                @livewire('edit-recipe',['recipe_id'=>$recipe->id,key($recipe->id)])
                             </div>
+                            
                         </td>
                     </tr>
-                    {{-- <div class="rounded border md:w-1/2 lg:w-1/4 p-3  h-[60vh] flex flex-col ">
-                        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTB8fHxlbnwwfHx8fA%3D%3D&w=1000&q=80"
-                            class=" w-full">
-                        <div class="flex space-">
-                            <span class="text-lg italic">Salade viennienne de marie</span>
-                            <span class="text-lg italic">Salade viennienne de marie</span>
-                        </div>
-                        <div class="flex flex-col">
-                            @forelse($recipe->ingredients as $ingredient)
-                            <span> {{$ingredient->name}}</span>
-                            @empty
 
-                            @endforelse
-                        </div>
-                    </div> --}}
 
                     @empty
-                    
+
                     @endforelse
 
                 </tbody>
