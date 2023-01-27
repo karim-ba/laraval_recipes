@@ -107,7 +107,7 @@
                             x-show="!newIngredient" @click="newIngredient=true">ajouter ingredient</button>
 
                         <div x-show="newIngredient" x-transition @click.away="newIngredient = false"
-                            class="right-10 border absolute bg-white rounded flex p-1">
+                            class="right-5 border absolute bg-white rounded flex p-1">
                             <div class="flex h-8 overflow-hidden space-x-2 w-9/10 py-0 text-sm">
                                 <select id="ingredients" wire:model="ingredient_id"
                                     class=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  w-full">
